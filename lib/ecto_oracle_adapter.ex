@@ -1,0 +1,2 @@
+defmodule EctoOracleAdapter do
+end
