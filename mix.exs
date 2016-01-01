@@ -27,6 +27,6 @@ defmodule EctoOracleAdapter.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:erloci, git: "git://github.com/K2InformaticsGmbH/erloci.git"}]
   end
 end
