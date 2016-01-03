@@ -1,2 +1,5 @@
-%{"erldb-driver": {:git, "git://github.com/RYTong/erldb-driver.git", "853784082947b716a3669c862f6e3bf536eacaee", []},
-  "erloci": {:git, "git://github.com/K2InformaticsGmbH/erloci.git", "93b1f35e94fc8e3d1762820ca7d735e8c0a3b1c3", []}}
+%{"decimal": {:hex, :decimal, "1.1.1"},
+  "ecto": {:hex, :ecto, "1.1.1"},
+  "erldb-driver": {:git, "git://github.com/RYTong/erldb-driver.git", "853784082947b716a3669c862f6e3bf536eacaee", []},
+  "erloci": {:git, "git://github.com/K2InformaticsGmbH/erloci.git", "93b1f35e94fc8e3d1762820ca7d735e8c0a3b1c3", []},
+  "poolboy": {:hex, :poolboy, "1.5.1"}}
