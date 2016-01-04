@@ -1,7 +1,7 @@
-defmodule Ecto.Adapters.Postgres do
+defmodule EctoOracleAdapter do
   @moduledoc """
-  Adapter module for PostgreSQL.
-  It uses `postgrex` for communicating to the database
+  Adapter module for Oracle.
+  It uses `erloci` for communicating to the database
   and a connection pool, such as `poolboy`.
   ## Features
     * Full query support (including joins, preloads and associations)
@@ -9,38 +9,17 @@ defmodule Ecto.Adapters.Postgres do
     * Support for data migrations
     * Support for ecto.create and ecto.drop operations
     * Support for transactional tests via `Ecto.Adapters.SQL`
-  ## Options
-  Postgres options split in different categories described
-  below. All options should be given via the repository
-  configuration.
   ### Compile time options
   Those options should be set in the config file and require
   recompilation in order to make an effect.
-    * `:adapter` - The adapter name, in this case, `Ecto.Adapters.Postgres`
-    * `:name`- The name of the Repo supervisor process
     * `:pool` - The connection pool module, defaults to `Ecto.Pools.Poolboy`
     * `:pool_timeout` - The default timeout to use on pool calls, defaults to `5000`
     * `:timeout` - The default timeout to use on queries, defaults to `15000`
     * `:log_level` - The level to use when logging queries (default: `:debug`)
-  ### Connection options
-    * `:hostname` - Server hostname
-    * `:port` - Server port (default: 5432)
-    * `:username` - Username
-    * `:password` - User password
-    * `:parameters` - Keyword list of connection parameters
-    * `:ssl` - Set to true if ssl should be used (default: false)
-    * `:ssl_opts` - A list of ssl options, see Erlang's `ssl` docs
-    * `:connect_timeout` - The timeout for establishing new connections (default: 5000)
-    * `:extensions` - Specify extensions to the postgres adapter
-  ### Storage options
-    * `:encoding` - the database encoding (default: "UTF8")
-    * `:template` - the template to create the database from
-    * `:lc_collate` - the collation order
-    * `:lc_ctype` - the character classification
   """
 
   # Inherit all behaviour from Ecto.Adapters.SQL
-  use Ecto.Adapters.SQL, :postgrex
+  use Ecto.Adapters.SQL, :oracle
 
   # And provide a custom storage implementation
   @behaviour Ecto.Adapter.Storage
