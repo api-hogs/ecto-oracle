@@ -1,23 +1,16 @@
 defmodule EctoOracleAdapter.Connection do
   @moduledoc false
 
-  @default_port 5437
   @behaviour Ecto.Adapters.Connection
   @behaviour Ecto.Adapters.SQL.Query
 
   ## Connection
-
   def connect(opts) do
-    json = Application.get_env(:ecto, :json_library)
-    extensions = [{EctoOracleAdapter.DateTime, []},
-      {Postgrex.Extensions.JSON, library: json}]
-
-    opts =
-    opts
-    |> Keyword.update(:extensions, extensions, &(&1 ++ extensions))
-    |> Keyword.update(:port, @default_port, &normalize_port/1)
-
-    # Postgrex.Connection.start_link(opts)
+    credentials = opts[:credentials]
+    opts = Keyword.delete(opts, :credentials)
+    oci = :erloci.new([Enum.into(opts, %{})])
+    session = oci.get_session(credentials[:tns], credentials[:user], credentials[:password])
+    {:ok, session}
   end
 
   def query(conn, sql, params, opts) do
