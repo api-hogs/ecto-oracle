@@ -1,12 +1,12 @@
 Code.require_file "../../integration_test/support/types.exs", __DIR__
 
-defmodule Ecto.Adapters.PostgresTest do
+defmodule EctoOracleAdapterTest do
   use ExUnit.Case, async: true
 
   import Ecto.Query
 
   alias Ecto.Queryable
-  alias Ecto.Adapters.Postgres.Connection, as: SQL
+  alias EctoOracleAdapter.Connection, as: SQL
 
   defmodule Model do
     use Ecto.Schema
@@ -17,10 +17,10 @@ defmodule Ecto.Adapters.PostgresTest do
       field :z, :integer
       field :w, {:array, :integer}
 
-      has_many :comments, Ecto.Adapters.PostgresTest.Model2,
+      has_many :comments, EctoOracleAdapterTest.Model2,
         references: :x,
         foreign_key: :z
-      has_one :permalink, Ecto.Adapters.PostgresTest.Model3,
+      has_one :permalink, EctoOracleAdapterTest.Model3,
         references: :y,
         foreign_key: :id
     end
@@ -30,7 +30,7 @@ defmodule Ecto.Adapters.PostgresTest do
     use Ecto.Schema
 
     schema "model2" do
-      belongs_to :post, Ecto.Adapters.PostgresTest.Model,
+      belongs_to :post, EctoOracleAdapterTest.Model,
         references: :x,
         foreign_key: :z
     end
@@ -47,8 +47,8 @@ defmodule Ecto.Adapters.PostgresTest do
   end
 
   defp normalize(query, operation \\ :all) do
-    {query, _params, _key} = Ecto.Query.Planner.prepare(query, operation, Ecto.Adapters.Postgres)
-    Ecto.Query.Planner.normalize(query, operation, Ecto.Adapters.Postgres)
+    {query, _params, _key} = Ecto.Query.Planner.prepare(query, operation, EctoOracleAdapter)
+    Ecto.Query.Planner.normalize(query, operation, EctoOracleAdapter)
   end
 
   test "from" do
