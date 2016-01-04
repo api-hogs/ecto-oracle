@@ -7,7 +7,7 @@ defmodule EctoOracleAdapter.Connection do
   ## Connection
   def connect(opts) do
     credentials = opts[:credentials]
-    opts = Keyword.delete(opts, :credentials)
+    opts = Dict.drop(opts, [:credentials])
     oci = :erloci.new([Enum.into(opts, %{})])
     session = oci.get_session(credentials[:tns], credentials[:user], credentials[:password])
     {:ok, session}
