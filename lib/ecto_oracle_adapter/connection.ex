@@ -13,6 +13,15 @@ defmodule EctoOracleAdapter.Connection do
     {:ok, session}
   end
 
+  def disconnect(conn) do
+    try do
+      conn.close()
+    catch
+      :exit, {:noproc, _} -> :ok
+    end
+    :ok
+  end
+
   def query(conn, sql, params, opts) do
     params = Enum.map params, fn
       %Ecto.Query.Tagged{value: value} -> value
