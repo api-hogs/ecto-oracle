@@ -130,4 +130,3 @@ defmodule Ecto.Adapters.Postgres do
     true
   end
 end
-Status API Training Shop Blog About Pricing
