@@ -75,5 +75,11 @@ end
 {:ok, _pid} = TestRepo.start_link
 {:ok, _pid} = PoolRepo.start_link
 
+table = %Ecto.Migration.Table{name: "schema_migrations"}
+try do
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, table}, [])
+rescue
+  e in RuntimeError -> e
+end
 :ok = Ecto.Migrator.up(TestRepo, 0, EctoOracleAdapter.Integration.Migration, log: false)
 Process.flag(:trap_exit, true)
