@@ -43,6 +43,9 @@ defmodule EctoOracleAdapter.Connection do
   def decode({:error, {_, err}}, _mapper) do
     {:error, err}
   end
+  def decode({:executed, _status}, _mapper) do
+   # _status 
+  end
 
   defp normalize_port(port) when is_binary(port), do: String.to_integer(port)
   defp normalize_port(port) when is_integer(port), do: port
