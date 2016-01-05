@@ -664,9 +664,9 @@ defmodule EctoOracleAdapter.Connection do
   defp column_options(type, opts) do
     default = Keyword.fetch(opts, :default)
     null    = Keyword.get(opts, :null)
-    pk      = Keyword.get(opts, :primary_key)
+    # pk      = Keyword.get(opts, :primary_key)
 
-    [default_expr(default, type), null_expr(null), pk_expr(pk)]
+    [default_expr(default, type), null_expr(null)]
   end
 
   defp pk_expr(true), do: "PRIMARY KEY"
@@ -700,7 +700,7 @@ defmodule EctoOracleAdapter.Connection do
   defp options_expr(nil),
   do: ""
   defp options_expr(keyword) when is_list(keyword),
-  do: error!(nil, "PostgreSQL adapter does not support keyword lists in :options")
+  do: error!(nil, "Oracle adapter does not support keyword lists in :options")
   defp options_expr(options),
   do: " #{options}"
 
@@ -789,6 +789,7 @@ defmodule EctoOracleAdapter.Connection do
   defp ecto_to_db(:datetime),   do: "timestamp"
   defp ecto_to_db(:binary),     do: "bytea"
   defp ecto_to_db(:map),        do: "jsonb"
+  defp ecto_to_db(:bigint),     do: "tt_bigint"
   defp ecto_to_db(other),       do: Atom.to_string(other)
 
   defp error!(nil, message) do
