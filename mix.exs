@@ -27,7 +27,7 @@ defmodule EctoOracleAdapter.Mixfile do
   end
 
   defp test_paths(adapter) when adapter in @adapters, do: ["integration_test/#{adapter}"]
-  defp test_paths(_), do: ["test/ecto", "test/mix"]
+  defp test_paths(_), do: ["test"]
 
   defp deps do
     [{:erloci, git: "git://github.com/K2InformaticsGmbH/erloci.git"},
