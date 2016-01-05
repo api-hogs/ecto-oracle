@@ -43,8 +43,8 @@ defmodule EctoOracleAdapter.Connection do
   def decode({:error, {_, err}}, _mapper) do
     {:error, err}
   end
-  def decode({:executed, _status}, _mapper) do
-   # _status 
+  def decode({:executed, status}, _mapper) do
+    {:ok, status}
   end
 
   defp normalize_port(port) when is_binary(port), do: String.to_integer(port)
@@ -198,8 +198,9 @@ defmodule EctoOracleAdapter.Connection do
 
   defp select_fields([], _sources, _query),
   do: "TRUE"
-  defp select_fields(fields, sources, query),
-  do: Enum.map_join(fields, ", ", &expr(&1, sources, query))
+  defp select_fields(fields, sources, query) do
+    Enum.map_join(fields, ", ", &expr(&1, sources, query))
+  end
 
   defp distinct_exprs(%Query{distinct: %QueryExpr{expr: exprs}} = query, sources)
   when is_list(exprs) do
