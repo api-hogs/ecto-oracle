@@ -56,15 +56,6 @@ defmodule EctoOracleAdapterTest do
     assert SQL.all(query) == ~s{SELECT m0."x" FROM "model" AS m0}
   end
 
-  test "from without model" do
-    query = "posts" |> select([r], r.x) |> normalize
-    assert SQL.all(query) == ~s{SELECT p0."x" FROM "posts" AS p0}
-
-    assert_raise Ecto.QueryError, ~r"PostgreSQL requires a schema module", fn ->
-      SQL.all from(p in "posts", select: p) |> normalize()
-    end
-  end
-
   test "select" do
     query = Model |> select([r], {r.x, r.y}) |> normalize
     assert SQL.all(query) == ~s{SELECT m0."x", m0."y" FROM "model" AS m0}
