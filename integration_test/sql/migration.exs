@@ -13,11 +13,11 @@ defmodule Ecto.Integration.MigrationTest do
       create @table do
         add :value, :integer
       end
-      create @index
+      # create @index
     end
 
     def down do
-      drop @index
+      # drop @index
       drop @table
     end
   end

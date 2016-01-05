@@ -59,6 +59,7 @@ defmodule EctoOracleAdapter.Connection do
 
   def begin_transaction do
     "BEGIN"
+    "SET TRANSACTION NAME '#{Ecto.UUID.generate()}'"
   end
 
   def rollback do
