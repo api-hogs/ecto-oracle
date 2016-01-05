@@ -28,6 +28,6 @@ defmodule EctoOracleAdapter.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:erloci, git: "git://github.com/K2InformaticsGmbH/erloci.git"},
-      {:ecto, "~> 1.1"}]
+      {:ecto, git: "git://github.com/elixir-lang/ecto.git"}]
   end
 end
