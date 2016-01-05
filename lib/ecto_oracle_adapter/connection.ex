@@ -543,9 +543,7 @@ defmodule EctoOracleAdapter.Connection do
 
   def execute_ddl({command, %Table{}=table, columns}) when command in [:create, :create_if_not_exists] do
     options       = options_expr(table.options)
-    if_not_exists = if command == :create_if_not_exists, do: " IF NOT EXISTS", else: ""
-
-    "CREATE TABLE" <> if_not_exists <>
+    "CREATE TABLE" <>
     " #{quote_table(table.prefix, table.name)} (#{column_definitions(table, columns)})" <> options
   end
 
