@@ -215,7 +215,7 @@ defmodule EctoOracleAdapter.Connection do
 
   defp from(sources) do
     {table, name, _model} = elem(sources, 0)
-    "FROM #{table} AS #{name}"
+    "FROM #{table} #{name}"
   end
 
   defp using(%Query{joins: []}, _sources), do: []
