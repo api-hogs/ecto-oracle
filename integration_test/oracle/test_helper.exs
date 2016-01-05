@@ -75,9 +75,17 @@ end
 {:ok, _pid} = TestRepo.start_link
 {:ok, _pid} = PoolRepo.start_link
 
-table = %Ecto.Migration.Table{name: "schema_migrations"}
+schema_table = %Ecto.Migration.Table{name: "schema_migrations"}
+users_table = %Ecto.Migration.Table{name: "users"}
+posts_table = %Ecto.Migration.Table{name: "posts"}
+posts_users_table = %Ecto.Migration.Table{name: "posts_users"}
+users_posts_table = %Ecto.Migration.Table{name: "users_posts"}
 try do
-  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, table}, [])
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, schema_table}, [])
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop_cascade, users_table}, [])
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop_cascade, posts_table}, [])
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, posts_users_table}, [])
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, users_posts_table}, [])
 rescue
   e in RuntimeError -> e
 end

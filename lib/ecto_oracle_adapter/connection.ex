@@ -124,19 +124,35 @@ defmodule EctoOracleAdapter.Connection do
     assemble(["DELETE FROM #{table} AS #{name}", join, where])
   end
 
-  def insert(prefix, table, header, rows, returning) do
-    values =
-    if header == [] do
-      "VALUES " <> Enum.map_join(rows, ",", fn _ -> "(DEFAULT)" end)
-    else
-      "(" <> Enum.map_join(header, ",", &quote_name/1) <> ") " <>
-      "VALUES " <> insert_all(rows, 1, "")
+  # def insert(prefix, table, header, rows, returning) do
+  #   values =
+  #   if header == [] do
+  #     "VALUES " <> Enum.map_join(rows, ",", fn _ -> "(DEFAULT)" end)
+  #   else
+  #     "(" <> Enum.map_join(header, ",", &quote_name/1) <> ") " <>
+  #     "VALUES " <> insert_all(rows, 1, "")
+  #   end
+
+  #   IO.inspect values 
+
+  #   "INSERT INTO #{quote_table(prefix, table)} " <> values <> returning(returning)
+  # end
+
+    def insert(prefix, table, fields, fields_array, returning, values) do
+      values =
+        if fields == [] do
+          returning(returning) <>
+          "DEFAULT VALUES"
+        else
+          "(" <> Enum.map_join(fields, ", ", &quote_name/1) <> ")" <>
+          " " <> returning(returning) <>
+          "VALUES (" <> Enum.map_join(1..length(values), ", ", &(&1)) <> ")"
+        end
+      "INSERT INTO #{quote_table(prefix, table)} " <> values
     end
 
-    "INSERT INTO #{quote_table(prefix, table)} " <> values <> returning(returning)
-  end
-
   defp insert_all([row|rows], counter, acc) do
+    IO.inspect row
     {counter, row} = insert_each(row, counter, "")
     insert_all(rows, counter, acc <> ",(" <> row <> ")")
   end
@@ -543,7 +559,7 @@ defmodule EctoOracleAdapter.Connection do
   alias Ecto.Migration.Index
   alias Ecto.Migration.Reference
 
-  @drops [:drop, :drop_if_exists]
+  @drops [:drop, :drop_if_exists, :drop_cascade]
 
   def execute_ddl({command, %Table{}=table, columns}) when command in [:create, :create_if_not_exists] do
     options       = options_expr(table.options)
@@ -551,10 +567,11 @@ defmodule EctoOracleAdapter.Connection do
     " #{quote_table(table.prefix, table.name)} (#{column_definitions(table, columns)})" <> options
   end
 
-  def execute_ddl({command, %Table{}=table}) when command in @drops do
+  def execute_ddl({command, %Table{}=table, }) when command in @drops do
     if_exists = if command == :drop_if_exists, do: " IF EXISTS", else: ""
+    if_cascade = if command == :drop_cascade, do: " CASCADE CONSTRAINTS", else: ""
 
-    "DROP TABLE" <> if_exists <> " #{quote_table(table.prefix, table.name)}"
+    "DROP TABLE" <> if_exists <> " #{quote_table(table.prefix, table.name)}" <> if_cascade
   end
 
   def execute_ddl({:alter, %Table{}=table, changes}) do
@@ -787,13 +804,18 @@ defmodule EctoOracleAdapter.Connection do
   end
 
   defp ecto_to_db({:array, t}), do: ecto_to_db(t) <> "[]"
-  defp ecto_to_db(:id),         do: "integer"
-  defp ecto_to_db(:binary_id),  do: "uuid"
-  defp ecto_to_db(:string),     do: "varchar"
+  defp ecto_to_db(:id),         do: "INT PRIMARY KEY"
+  defp ecto_to_db(:binary_id),  do: "RAW(16)"
+  defp ecto_to_db(:string),     do: "VARCHAR"
   defp ecto_to_db(:datetime),   do: "TIMESTAMP"
-  defp ecto_to_db(:binary),     do: "bytea"
-  defp ecto_to_db(:map),        do: "jsonb"
+  defp ecto_to_db(:binary),     do: "BLOB"
+  defp ecto_to_db(:map),        do: "CLOB"
+  defp ecto_to_db(:text),       do: "CLOB"
+  defp ecto_to_db(:serial),     do: "NUMBER(10) PRIMARY KEY"
+  defp ecto_to_db(:uuid),       do: "RAW(16)"
+  defp ecto_to_db(:date),       do: "DATE"
   defp ecto_to_db(:bigint),     do: "NUMBER"
+  defp ecto_to_db(:boolean),    do: "CHAR(1)"
   defp ecto_to_db(other),       do: Atom.to_string(other)
 
   defp error!(nil, message) do
