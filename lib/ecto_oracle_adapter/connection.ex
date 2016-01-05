@@ -31,7 +31,9 @@ defmodule EctoOracleAdapter.Connection do
     IO.inspect(sql)
     IO.inspect(params)
     IO.inspect(opts)
-    result = conn.prep_sql(sql).exec_stmt()
+    stmt = conn.prep_sql(sql)
+    result = stmt.exec_stmt()
+    stmt.close()
     IO.inspect(result)
     result
   end
