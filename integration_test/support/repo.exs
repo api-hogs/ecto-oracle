@@ -1,4 +1,4 @@
-defmodule Ecto.Integration.Repo do
+defmodule EctoOracleAdapter.Integration.Repo do
   defmacro __using__(opts) do
     quote do
       use Ecto.Repo, unquote(opts)
