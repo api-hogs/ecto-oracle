@@ -789,7 +789,7 @@ defmodule EctoOracleAdapter.Connection do
   defp ecto_to_db(:id),         do: "integer"
   defp ecto_to_db(:binary_id),  do: "uuid"
   defp ecto_to_db(:string),     do: "varchar"
-  defp ecto_to_db(:datetime),   do: "DATE"
+  defp ecto_to_db(:datetime),   do: "TIMESTAMP"
   defp ecto_to_db(:binary),     do: "bytea"
   defp ecto_to_db(:map),        do: "jsonb"
   defp ecto_to_db(:bigint),     do: "NUMBER"
