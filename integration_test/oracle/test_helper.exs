@@ -6,8 +6,8 @@ Application.put_env(:ecto, :lock_for_update, "FOR UPDATE")
 Application.put_env(:ecto, :primary_key_type, :id)
 
 # Configure PG connection
-Application.put_env(:ecto, :pg_test_url,
-  "ecto://" <> (System.get_env("PG_URL") || "postgres:postgres@localhost")
+Application.put_env(:ecto, :oracle_test_url,
+  "system/oracle@gitlab.api-hogs.io:49161"
 )
 
 # Load support files
@@ -22,15 +22,15 @@ pool =
   end
 
 # Basic test repo
-alias Ecto.Integration.TestRepo
+alias EctoOracleAdapter.Integration.TestRepo
 
 Application.put_env(:ecto, TestRepo,
-  adapter: Ecto.Adapters.Postgres,
-  url: Application.get_env(:ecto, :pg_test_url) <> "/ecto_test",
+  adapter: EctoOracleAdapter,
+  url: Application.get_env(:ecto, :oracle_test_url),
   pool: Ecto.Adapters.SQL.Sandbox)
 
-defmodule Ecto.Integration.TestRepo do
-  use Ecto.Integration.Repo, otp_app: :ecto
+defmodule EctoOracleAdapter.Integration.TestRepo do
+  use EctoOracleAdapter.Integration.Repo, otp_app: :ecto
 
   def create_prefix(prefix) do
     "create schema #{prefix}"
@@ -42,19 +42,19 @@ defmodule Ecto.Integration.TestRepo do
 end
 
 # Pool repo for transaction and lock tests
-alias Ecto.Integration.PoolRepo
+alias EctoOracleAdapter.Integration.PoolRepo
 
 Application.put_env(:ecto, PoolRepo,
-  adapter: Ecto.Adapters.Postgres,
+  adapter: EctoOracleAdapter,
   pool: pool,
-  url: Application.get_env(:ecto, :pg_test_url) <> "/ecto_test",
+  url: Application.get_env(:ecto, :oracle_test_url) <> "/ecto_test",
   pool_size: 10)
 
-defmodule Ecto.Integration.PoolRepo do
-  use Ecto.Integration.Repo, otp_app: :ecto
+defmodule EctoOracleAdapter.Integration.PoolRepo do
+  use EctoOracleAdapter.Integration.Repo, otp_app: :ecto
 end
 
-defmodule Ecto.Integration.Case do
+defmodule EctoOracleAdapter.Integration.Case do
   use ExUnit.CaseTemplate
 
   setup_all do
@@ -76,5 +76,5 @@ _   = Ecto.Storage.down(TestRepo)
 {:ok, _pid} = TestRepo.start_link
 {:ok, _pid} = PoolRepo.start_link
 
-:ok = Ecto.Migrator.up(TestRepo, 0, Ecto.Integration.Migration, log: false)
+:ok = Ecto.Migrator.up(TestRepo, 0, EctoOracleAdapter.Integration.Migration, log: false)
 Process.flag(:trap_exit, true)

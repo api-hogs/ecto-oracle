@@ -68,10 +68,10 @@ defmodule EctoOracleAdapter do
   end
 
   defp run_with_psql(database, sql_command) do
-    unless System.find_executable("psql") do
-      raise "could not find executable `psql` in path, " <>
-            "please guarantee it is available before running ecto commands"
-    end
+    # unless System.find_executable("psql") do
+    #   raise "could not find executable `psql` in path, " <>
+    #         "please guarantee it is available before running ecto commands"
+    # end
 
     env =
       if password = database[:password] do
@@ -100,7 +100,8 @@ defmodule EctoOracleAdapter do
                     "--no-psqlrc",
                     "-d", "template1",
                     "-c", sql_command]
-    System.cmd("psql", args, env: env, stderr_to_stdout: true)
+    # System.cmd("psql", args, env: env, stderr_to_stdout: true)
+    IO.puts(args)
   end
 
   @doc false
