@@ -49,7 +49,7 @@ alias EctoOracleAdapter.Integration.PoolRepo
 Application.put_env(:ecto, PoolRepo,
   adapter: EctoOracleAdapter,
   pool: pool,
-  url: Application.get_env(:ecto, :oracle_test_url) <> "/ecto_test",
+  credentials: Application.get_env(:ecto, :credentials),
   pool_size: 10)
 
 defmodule EctoOracleAdapter.Integration.PoolRepo do

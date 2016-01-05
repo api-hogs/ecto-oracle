@@ -1,23 +1,4 @@
 defmodule EctoOracleAdapter do
-  @moduledoc """
-  Adapter module for Oracle.
-  It uses `erloci` for communicating to the database
-  and a connection pool, such as `poolboy`.
-  ## Features
-    * Full query support (including joins, preloads and associations)
-    * Support for transactions
-    * Support for data migrations
-    * Support for ecto.create and ecto.drop operations
-    * Support for transactional tests via `Ecto.Adapters.SQL`
-  ### Compile time options
-  Those options should be set in the config file and require
-  recompilation in order to make an effect.
-    * `:pool` - The connection pool module, defaults to `Ecto.Pools.Poolboy`
-    * `:pool_timeout` - The default timeout to use on pool calls, defaults to `5000`
-    * `:timeout` - The default timeout to use on queries, defaults to `15000`
-    * `:log_level` - The level to use when logging queries (default: `:debug`)
-  """
-
   # Inherit all behaviour from Ecto.Adapters.SQL
   use Ecto.Adapters.SQL, :oracle
 
@@ -28,80 +9,16 @@ defmodule EctoOracleAdapter do
 
   @doc false
   def storage_up(opts) do
-    database = Keyword.fetch!(opts, :database)
-    encoding = Keyword.get(opts, :encoding, "UTF8")
-
-    extra = ""
-
-    if template = Keyword.get(opts, :template) do
-      extra = extra <> " TEMPLATE=#{template}"
-    end
-
-    if lc_collate = Keyword.get(opts, :lc_collate) do
-      extra = extra <> " LC_COLLATE='#{lc_collate}'"
-    end
-
-    if lc_ctype = Keyword.get(opts, :lc_ctype) do
-      extra = extra <> " LC_CTYPE='#{lc_ctype}'"
-    end
-
-    {output, status} =
-      run_with_psql opts, "CREATE DATABASE \"" <> database <>
-                          "\" ENCODING='#{encoding}'" <> extra
-
-    cond do
-      status == 0                       -> :ok
-      String.contains?(output, "42P04") -> {:error, :already_up}
-      true                              -> {:error, output}
-    end
+    raise "Not implemented for oracle"
   end
 
   @doc false
   def storage_down(opts) do
-    {output, status} = run_with_psql(opts, "DROP DATABASE \"#{opts[:database]}\"")
-
-    cond do
-      status == 0                       -> :ok
-      String.contains?(output, "3D000") -> {:error, :already_down}
-      true                              -> {:error, output}
-    end
+    raise "Not implemented for oracle"
   end
 
   defp run_with_psql(database, sql_command) do
-    # unless System.find_executable("psql") do
-    #   raise "could not find executable `psql` in path, " <>
-    #         "please guarantee it is available before running ecto commands"
-    # end
-
-    env =
-      if password = database[:password] do
-        [{"PGPASSWORD", password}]
-      else
-        []
-      end
-    env = [{"PGCONNECT_TIMEOUT", "10"} | env]
-
-    args = []
-
-    if username = database[:username] do
-      args = ["-U", username|args]
-    end
-
-    if port = database[:port] do
-      args = ["-p", to_string(port)|args]
-    end
-
-    host = database[:hostname] || System.get_env("PGHOST") || "localhost"
-    args = args ++ ["--quiet",
-                    "--host", host,
-                    "--no-password",
-                    "--set", "ON_ERROR_STOP=1",
-                    "--set", "VERBOSITY=verbose",
-                    "--no-psqlrc",
-                    "-d", "template1",
-                    "-c", sql_command]
-    # System.cmd("psql", args, env: env, stderr_to_stdout: true)
-    IO.puts(args)
+    raise "Not implemented for oracle"
   end
 
   @doc false
