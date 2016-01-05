@@ -33,8 +33,7 @@ defmodule EctoOracleAdapter.Connection do
     IO.inspect(opts)
     result = conn.prep_sql(sql).exec_stmt()
     IO.inspect(result)
-
-    # Postgrex.Connection.query(conn, sql, params, [decode: :manual] ++ opts)
+    result
   end
 
   def decode({:ok, res}, mapper) do
