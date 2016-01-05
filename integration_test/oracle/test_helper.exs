@@ -9,7 +9,7 @@ Application.put_env(:ecto, :primary_key_type, :id)
 Application.put_env(:ecto, :credentials, %{
   user: "system",
   password: "oracle",
-  tns: ""
+  tns: "(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=46.101.228.77)(PORT= 49161)))(CONNECT_DATA=(SERVICE_NAME=XE)))"
 })
 
 # Load support files
@@ -28,7 +28,7 @@ alias EctoOracleAdapter.Integration.TestRepo
 
 Application.put_env(:ecto, TestRepo,
   adapter: EctoOracleAdapter,
-  url: Application.get_env(:ecto, :oracle_test_url),
+  credentials: Application.get_env(:ecto, :credentials),
   pool: Ecto.Adapters.SQL.Sandbox)
 
 defmodule EctoOracleAdapter.Integration.TestRepo do
@@ -72,9 +72,6 @@ defmodule EctoOracleAdapter.Integration.Case do
 end
 
 # Load up the repository, start it, and run migrations
-_   = Ecto.Storage.down(TestRepo)
-:ok = Ecto.Storage.up(TestRepo)
-
 {:ok, _pid} = TestRepo.start_link
 {:ok, _pid} = PoolRepo.start_link
 

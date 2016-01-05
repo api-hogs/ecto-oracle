@@ -1,6 +1,6 @@
 defmodule EctoOracleAdapter do
   # Inherit all behaviour from Ecto.Adapters.SQL
-  use Ecto.Adapters.SQL, :oracle
+  use Ecto.Adapters.SQL, :ecto_oracle_adapter
 
   # And provide a custom storage implementation
   @behaviour Ecto.Adapter.Storage
