@@ -5,10 +5,12 @@ ExUnit.start
 Application.put_env(:ecto, :lock_for_update, "FOR UPDATE")
 Application.put_env(:ecto, :primary_key_type, :id)
 
-# Configure PG connection
-Application.put_env(:ecto, :oracle_test_url,
-  "system/oracle@gitlab.api-hogs.io:49161"
-)
+# Configure ORACLE connection
+Application.put_env(:ecto, :credentials, %{
+  user: "system",
+  password: "oracle",
+  tns: ""
+})
 
 # Load support files
 Code.require_file "../support/repo.exs", __DIR__
