@@ -40,8 +40,8 @@ defmodule EctoOracleAdapter.Connection do
   def decode({:ok, res}, mapper) do
     # {:ok, Postgrex.Result.decode(res, mapper) |> Map.from_struct}
   end
-  def decode({:error, _} = err, _mapper) do
-    err
+  def decode({:error, {_, err}}, _mapper) do
+    {:error, err}
   end
 
   defp normalize_port(port) when is_binary(port), do: String.to_integer(port)
