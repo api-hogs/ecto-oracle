@@ -208,13 +208,13 @@ defmodule EctoOracleAdapterTest do
 
   test "tagged type" do
     query = Model |> select([], type(^"601d74e4-a8d3-4b6e-8365-eddb4c893327", Ecto.UUID)) |> normalize
-    assert SQL.all(query) == ~s{SELECT $1::uuid FROM "model" m0}
+    assert SQL.all(query) == ~s{SELECT $1::RAW(16) FROM "model" m0}
 
     query = Model |> select([], type(^1, Custom.Permalink)) |> normalize
-    assert SQL.all(query) == ~s{SELECT $1::integer FROM "model" m0}
+    assert SQL.all(query) == ~s{SELECT $1::INT PRIMARY KEY FROM "model" m0}
 
     query = Model |> select([], type(^[1,2,3], {:array, Custom.Permalink})) |> normalize
-    assert SQL.all(query) == ~s{SELECT $1::integer[] FROM "model" m0}
+    assert SQL.all(query) == ~s{SELECT $1::INT PRIMARY KEY[] FROM "model" m0}
   end
 
   test "nested expressions" do
@@ -543,11 +543,11 @@ defmodule EctoOracleAdapterTest do
                 {:add, :tags, {:array, :string}, [default: []]}]}
 
     assert SQL.execute_ddl(create) == """
-    CREATE TABLE "posts" ("name" varchar(20) DEFAULT 'Untitled' NOT NULL,
+    CREATE TABLE "posts" ("name" VARCHAR(20) DEFAULT 'Untitled' NOT NULL,
     "price" numeric(8,2) DEFAULT expr,
     "on_hand" integer DEFAULT 0 NULL,
-    "is_active" boolean DEFAULT true,
-    "tags" varchar(255)[] DEFAULT ARRAY[]::varchar[])
+    "is_active" CHAR(1) DEFAULT true,
+    "tags" VARCHAR(255)[] DEFAULT ARRAY[]::VARCHAR[])
     """ |> remove_newlines
   end
 
@@ -571,7 +571,7 @@ defmodule EctoOracleAdapterTest do
                 {:add, :category_4, references(:categories, on_delete: :nilify_all), []}]}
 
     assert SQL.execute_ddl(create) == """
-    CREATE TABLE "posts" ("id" serial,
+    CREATE TABLE "posts" ("id" NUMBER(10) PRIMARY KEY,
     "category_0" integer CONSTRAINT "posts_category_0_fkey" REFERENCES "categories"("id"),
     "category_1" integer CONSTRAINT "foo_bar" REFERENCES "categories"("id"),
     "category_2" integer CONSTRAINT "posts_category_2_fkey" REFERENCES "categories"("id"),
@@ -585,7 +585,7 @@ defmodule EctoOracleAdapterTest do
                [{:add, :id, :serial, [primary_key: true]},
                 {:add, :created_at, :datetime, []}]}
     assert SQL.execute_ddl(create) ==
-           ~s|CREATE TABLE "posts" ("id" serial, "created_at" TIMESTAMP) WITH FOO=BAR|
+           ~s|CREATE TABLE "posts" ("id" NUMBER(10) PRIMARY KEY, "created_at" TIMESTAMP) WITH FOO=BAR|
   end
 
   test "drop table" do
@@ -609,7 +609,7 @@ defmodule EctoOracleAdapterTest do
 
     assert SQL.execute_ddl(alter) == """
     ALTER TABLE "posts"
-    ADD COLUMN "title" varchar(100) DEFAULT 'Untitled' NOT NULL,
+    ADD COLUMN "title" VARCHAR(100) DEFAULT 'Untitled' NOT NULL,
     ADD COLUMN "author_id" integer CONSTRAINT "posts_author_id_fkey" REFERENCES "author"("id"),
     ALTER COLUMN "price" TYPE numeric(8,2) ,
     ALTER COLUMN "price" DROP NOT NULL,
