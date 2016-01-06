@@ -77,13 +77,7 @@ defmodule EctoOracleAdapter.Connection do
   def decode({:error, {_, err}}, _mapper) do
     {:error, err}
   end
-  def decode({:executed, status}, _mapper) do
-    {:ok, status}
-  end
-  def decode({:rowids, _} = res, mapper) do
-    {:ok, EctoOracleAdapter.Result.decode(res, mapper) |> Map.from_struct}
-  end
-  def decode({_, res}, mapper) do
+  def decode(res, mapper) do
     {:ok, EctoOracleAdapter.Result.decode(res, mapper) |> Map.from_struct}
   end
 

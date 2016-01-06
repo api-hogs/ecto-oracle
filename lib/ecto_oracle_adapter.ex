@@ -24,7 +24,7 @@ defmodule EctoOracleAdapter do
   @doc false
 
   def supports_ddl_transaction? do
-    false
+    true
   end
 
   def insert(repo, %{source: {prefix, source}} = schema_meta, params, returning, opts) do
