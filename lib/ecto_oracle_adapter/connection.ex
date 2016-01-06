@@ -68,6 +68,7 @@ defmodule EctoOracleAdapter.Connection do
     else
       result = stmt.exec_stmt()
     end
+
     stmt.close()
     IO.inspect(result)
     result
@@ -78,6 +79,9 @@ defmodule EctoOracleAdapter.Connection do
   end
   def decode({:executed, status}, _mapper) do
     {:ok, status}
+  end
+  def decode({:rowids, _} = res, mapper) do
+    {:ok, EctoOracleAdapter.Result.decode(res, mapper) |> Map.from_struct}
   end
   def decode({_, res}, mapper) do
     {:ok, EctoOracleAdapter.Result.decode(res, mapper) |> Map.from_struct}
@@ -834,7 +838,7 @@ defmodule EctoOracleAdapter.Connection do
   defp ecto_to_db(:text),       do: "CLOB"
   defp ecto_to_db(:serial),     do: "INT PRIMARY KEY"
   defp ecto_to_db(:uuid),       do: "RAW(16)"
-  defp ecto_to_db(:date),       do: "DATE"
+  defp ecto_to_db(:date),       do: "TIMESTAMP"
   defp ecto_to_db(:bigint),     do: "NUMBER"
   defp ecto_to_db(:boolean),    do: "CHAR(1)"
   defp ecto_to_db(other),       do: Atom.to_string(other)

@@ -11,8 +11,11 @@ defmodule EctoOracleAdapter.Result do
              decoders: nil]
 
   defp normalize(res) do
-    rows = case hd(res) do
-      {_column, _int1, number_of_records, _, _} when number_of_records == 0 -> []
+    IO.puts 'GGGGGGGG'
+    IO.inspect res
+    rows = case res do
+      {:rowids, ids} -> ids
+      # {_column, _int1, number_of_records, _, _} when number_of_records == 0 -> []
       _ -> []
     end
 
