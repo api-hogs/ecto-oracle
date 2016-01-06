@@ -22,17 +22,37 @@ defmodule EctoOracleAdapter.Connection do
     :ok
   end
 
+  defp normalizer(x) do
+      IO.inspect x
+     case x do
+       {field, {{full_year, month, day}, {hour, minute, second, _}}} ->
+         {field, :oci_util.edatetime_to_ora({{full_year, month, day},{hour, minute, second}})}
+       _ -> x
+     end
+  end
+
   def query(conn, sql, params, opts) do
     params = Enum.map params, fn
       %Ecto.Query.Tagged{value: value} -> value
       value -> value
     end
 
+    normalized_params = Enum.map(params, &normalizer/1)
+    {_, values} = Enum.unzip(normalized_params)
+    tupled_values = [List.to_tuple(values)]
+
     IO.inspect(sql)
     IO.inspect(params)
+    IO.inspect(tupled_values)
     IO.inspect(opts)
+
     stmt = conn.prep_sql(sql)
-    result = stmt.exec_stmt()
+    if Regex.match?(~r/^(INSERT|UPDATE)/, sql) do
+      stmt.bind_vars([{":inserted_at", 'SQLT_DAT'}, {":version", 'SQLT_NUM'}])
+      result = stmt.exec_stmt(tupled_values)
+    else
+      result = stmt.exec_stmt()
+    end
     stmt.close()
     IO.inspect(result)
     result
@@ -793,11 +813,11 @@ defmodule EctoOracleAdapter.Connection do
   defp ecto_to_db(:id),         do: "INT PRIMARY KEY"
   defp ecto_to_db(:binary_id),  do: "RAW(16)"
   defp ecto_to_db(:string),     do: "VARCHAR"
-  defp ecto_to_db(:datetime),   do: "TIMESTAMP"
+  defp ecto_to_db(:datetime),   do: "DATE"
   defp ecto_to_db(:binary),     do: "BLOB"
   defp ecto_to_db(:map),        do: "CLOB"
   defp ecto_to_db(:text),       do: "CLOB"
-  defp ecto_to_db(:serial),     do: "NUMBER(10) PRIMARY KEY"
+  defp ecto_to_db(:serial),     do: "INT PRIMARY KEY"
   defp ecto_to_db(:uuid),       do: "RAW(16)"
   defp ecto_to_db(:date),       do: "DATE"
   defp ecto_to_db(:bigint),     do: "NUMBER"
