@@ -126,35 +126,19 @@ defmodule EctoOracleAdapter.Connection do
     assemble(["DELETE FROM #{table} AS #{name}", join, where])
   end
 
-  # def insert(prefix, table, header, rows, returning) do
-  #   values =
-  #   if header == [] do
-  #     "VALUES " <> Enum.map_join(rows, ",", fn _ -> "(DEFAULT)" end)
-  #   else
-  #     "(" <> Enum.map_join(header, ",", &quote_name/1) <> ") " <>
-  #     "VALUES " <> insert_all(rows, 1, "")
-  #   end
-
-  #   IO.inspect values 
-
-  #   "INSERT INTO #{quote_table(prefix, table)} " <> values <> returning(returning)
-  # end
-
-    def insert(prefix, table, fields, fields_array, returning, values) do
-      values =
-        if fields == [] do
-          returning(returning) <>
-          "DEFAULT VALUES"
-        else
-          "(" <> Enum.map_join(fields, ", ", &quote_name/1) <> ")" <>
-          " " <> returning(returning) <>
-          "VALUES (" <> Enum.map_join(1..length(values), ", ", &(&1)) <> ")"
-        end
-      "INSERT INTO #{quote_table(prefix, table)} " <> values
+  def insert(prefix, table, header, rows, returning) do
+    values =
+    if header == [] do
+      "VALUES " <> Enum.map_join(rows, ",", fn _ -> "(DEFAULT)" end)
+    else
+      "(" <> Enum.map_join(header, ",", &quote_name/1) <> ") " <>
+      "VALUES (" <> Enum.map_join(header, ", ", &(":#{&1}")) <> ")"
     end
 
+    "INSERT INTO #{quote_table(prefix, table)} " <> values <> returning(returning)
+  end
+
   defp insert_all([row|rows], counter, acc) do
-    IO.inspect row
     {counter, row} = insert_each(row, counter, "")
     insert_all(rows, counter, acc <> ",(" <> row <> ")")
   end

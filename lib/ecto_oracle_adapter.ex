@@ -27,21 +27,9 @@ defmodule EctoOracleAdapter do
     false
   end
 
-  defp normalizer(x) do
-    case x do
-      {:inserted_at, value} ->
-        {:inserted_at, elem(Ecto.DateTime.cast(value), 1) |> Ecto.DateTime.to_string}
-      _ -> x
-    end
-  end
-
   def insert(repo, %{source: {prefix, source}}, params, returning, opts) do
-    IO.puts "FFFFFFFFFFFFFFFFFFFFFF"
-    normalized_params = :lists.map(&normalizer/1, params)
-    IO.inspect normalized_params
     {fields, values} = :lists.unzip(params)
-    IO.inspect values
-    sql = @conn.insert(prefix, source, fields, [fields], returning, values)
-    Ecto.Adapters.SQL.struct(repo, @conn, sql, values, returning, opts)
+    sql = @conn.insert(prefix, source, fields, [fields], returning)
+    Ecto.Adapters.SQL.struct(repo, @conn, sql, params, returning, opts)
   end
 end
