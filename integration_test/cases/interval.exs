@@ -1,8 +1,8 @@
-defmodule Ecto.Integration.IntervalTest do
-  use Ecto.Integration.Case
+defmodule EctoOracleAdapter.Integration.IntervalTest do
+  use EctoOracleAdapter.Integration.Case
 
-  alias Ecto.Integration.Post
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.Post
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Query
 
   @posted %Ecto.Date{year: 2014, month: 1, day: 1}

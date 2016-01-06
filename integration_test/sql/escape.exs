@@ -1,9 +1,9 @@
-defmodule Ecto.Integration.EscapeTest do
-  use Ecto.Integration.Case
+defmodule EctoOracleAdapter.Integration.EscapeTest do
+  use EctoOracleAdapter.Integration.Case
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Query
-  alias Ecto.Integration.Post
+  alias EctoOracleAdapter.Integration.Post
 
   test "Repo.insert! escape" do
     TestRepo.insert!(%Post{title: "'"})

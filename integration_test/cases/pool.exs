@@ -1,6 +1,6 @@
 Code.require_file "../support/file_helpers.exs", __DIR__
 
-defmodule Ecto.Integration.PoolTest do
+defmodule EctoOracleAdapter.Integration.PoolTest do
   use ExUnit.Case, async: true
 
   pool =
@@ -9,8 +9,8 @@ defmodule Ecto.Integration.PoolTest do
       "sojourn_broker" -> Ecto.Pools.SojournBroker
     end
 
-  repo = Application.get_env(:ecto, Ecto.Integration.TestRepo) ||
-         raise "could not find configuration for Ecto.Integration.TestRepo"
+  repo = Application.get_env(:ecto, EctoOracleAdapter.Integration.TestRepo) ||
+         raise "could not find configuration for EctoOracleAdapter.Integration.TestRepo"
 
   Application.put_env(:ecto, __MODULE__.MockRepo,
                       [pool: pool, pool_size: 1] ++ repo)

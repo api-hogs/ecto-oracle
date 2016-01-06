@@ -1,18 +1,18 @@
 Code.require_file "../support/types.exs", __DIR__
 
-defmodule Ecto.Integration.RepoTest do
-  use Ecto.Integration.Case
+defmodule EctoOracleAdapter.Integration.RepoTest do
+  use EctoOracleAdapter.Integration.Case
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Query
 
-  alias Ecto.Integration.Post
-  alias Ecto.Integration.User
-  alias Ecto.Integration.PostUsecTimestamps
-  alias Ecto.Integration.Comment
-  alias Ecto.Integration.Permalink
-  alias Ecto.Integration.Custom
-  alias Ecto.Integration.Barebone
+  alias EctoOracleAdapter.Integration.Post
+  alias EctoOracleAdapter.Integration.User
+  alias EctoOracleAdapter.Integration.PostUsecTimestamps
+  alias EctoOracleAdapter.Integration.Comment
+  alias EctoOracleAdapter.Integration.Permalink
+  alias EctoOracleAdapter.Integration.Custom
+  alias EctoOracleAdapter.Integration.Barebone
 
   test "returns already started for started repos" do
     assert {:error, {:already_started, _}} = TestRepo.start_link

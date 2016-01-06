@@ -1,7 +1,7 @@
-defmodule Ecto.Integration.ConstraintTest do
+defmodule EctoOracleAdapter.Integration.ConstraintTest do
   use ExUnit.Case, async: true
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Migrator, only: [up: 4, down: 4]
 
   defmodule ExcludeConstraintMigration do
@@ -24,7 +24,7 @@ defmodule Ecto.Integration.ConstraintTest do
   end
 
   defmodule ExcludeConstraintModel do
-    use Ecto.Integration.Schema
+    use EctoOracleAdapter.Integration.Schema
 
     schema "exclude_constraint_migration" do
       field :from, :integer

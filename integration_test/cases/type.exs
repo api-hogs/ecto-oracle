@@ -1,16 +1,16 @@
 Code.require_file "../support/types.exs", __DIR__
 
-defmodule Ecto.Integration.TypeTest do
-  use Ecto.Integration.Case
+defmodule EctoOracleAdapter.Integration.TypeTest do
+  use EctoOracleAdapter.Integration.Case
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Query
 
-  alias Ecto.Integration.Post
-  alias Ecto.Integration.Tag
-  alias Ecto.Integration.Custom
-  alias Ecto.Integration.Order
-  alias Ecto.Integration.Item
+  alias EctoOracleAdapter.Integration.Post
+  alias EctoOracleAdapter.Integration.Tag
+  alias EctoOracleAdapter.Integration.Custom
+  alias EctoOracleAdapter.Integration.Order
+  alias EctoOracleAdapter.Integration.Item
 
   test "primitive types" do
     integer  = 1

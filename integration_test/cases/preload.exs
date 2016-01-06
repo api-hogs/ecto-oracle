@@ -1,14 +1,14 @@
-defmodule Ecto.Integration.PreloadTest do
-  use Ecto.Integration.Case
+defmodule EctoOracleAdapter.Integration.PreloadTest do
+  use EctoOracleAdapter.Integration.Case
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Query
 
-  alias Ecto.Integration.Post
-  alias Ecto.Integration.Comment
-  alias Ecto.Integration.Permalink
-  alias Ecto.Integration.User
-  alias Ecto.Integration.Custom
+  alias EctoOracleAdapter.Integration.Post
+  alias EctoOracleAdapter.Integration.Comment
+  alias EctoOracleAdapter.Integration.Permalink
+  alias EctoOracleAdapter.Integration.User
+  alias EctoOracleAdapter.Integration.Custom
 
   test "preload has_many" do
     p1 = TestRepo.insert!(%Post{title: "1"})

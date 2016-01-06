@@ -1,7 +1,7 @@
-defmodule Ecto.Integration.TestTransactionTest do
+defmodule EctoOracleAdapter.Integration.TestTransactionTest do
   use ExUnit.Case
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   alias Ecto.Pool
 
   @ref {Ecto.Pool, Ecto.Adapters.SQL.Sandbox, elem(TestRepo.__pool__, 1)}

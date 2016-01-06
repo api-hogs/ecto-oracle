@@ -1,11 +1,11 @@
-defmodule Ecto.Integration.DeadlockTest do
+defmodule EctoOracleAdapter.Integration.DeadlockTest do
   # We can keep this test async as long as it
   # is the only one accessing advisory locks
   use ExUnit.Case, async: true
   require Logger
 
   @timeout 500
-  alias Ecto.Integration.PoolRepo
+  alias EctoOracleAdapter.Integration.PoolRepo
 
   test "deadlocks reset worker" do
     tx1 = self()
@@ -35,9 +35,9 @@ defmodule Ecto.Integration.DeadlockTest do
       Logger.debug "#{inspect self()} acquiring #{key2}"
       pg_advisory_xact_lock(key2)  # try to acquire lock on key2 (might deadlock)
     rescue
-      err in [Postgrex.Error] ->
+      err in [Oracle.Error] ->
         Logger.debug "#{inspect self()} got killed by deadlock detection"
-        assert %Postgrex.Error{postgres: %{code: :deadlock_detected}} = err
+        assert %Oracle.Error{oracle: %{code: :deadlock_detected}} = err
 
         assert_tx_aborted
 
@@ -65,9 +65,9 @@ defmodule Ecto.Integration.DeadlockTest do
     try do
       Ecto.Adapters.SQL.query!(PoolRepo, "SELECT 1", []);
     rescue
-      err in [Postgrex.Error] ->
+      err in [Oracle.Error] ->
         # current transaction is aborted, commands ignored until end of transaction block
-        assert %Postgrex.Error{postgres: %{code: :in_failed_sql_transaction}} = err
+        assert %Oracle.Error{oracle: %{code: :in_failed_sql_transaction}} = err
     else
       _ -> flunk "transaction should be aborted"
     end

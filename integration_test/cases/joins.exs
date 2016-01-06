@@ -1,13 +1,13 @@
-defmodule Ecto.Integration.JoinsTest do
-  use Ecto.Integration.Case
+defmodule EctoOracleAdapter.Integration.JoinsTest do
+  use EctoOracleAdapter.Integration.Case
 
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.TestRepo
   import Ecto.Query
 
-  alias Ecto.Integration.Post
-  alias Ecto.Integration.Comment
-  alias Ecto.Integration.Permalink
-  alias Ecto.Integration.User
+  alias EctoOracleAdapter.Integration.Post
+  alias EctoOracleAdapter.Integration.Comment
+  alias EctoOracleAdapter.Integration.Permalink
+  alias EctoOracleAdapter.Integration.User
 
   @tag :update_with_join
   test "update all with joins" do
