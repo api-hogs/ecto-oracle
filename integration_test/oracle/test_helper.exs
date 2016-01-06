@@ -80,12 +80,14 @@ users_table = %Ecto.Migration.Table{name: "users"}
 posts_table = %Ecto.Migration.Table{name: "posts"}
 posts_users_table = %Ecto.Migration.Table{name: "posts_users"}
 users_posts_table = %Ecto.Migration.Table{name: "users_posts"}
+transactions_table = %Ecto.Migration.Table{name: "transactions"}
 try do
   TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, schema_table}, [])
   TestRepo.__adapter__.execute_ddl(TestRepo, {:drop_cascade, users_table}, [])
   TestRepo.__adapter__.execute_ddl(TestRepo, {:drop_cascade, posts_table}, [])
   TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, posts_users_table}, [])
   TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, users_posts_table}, [])
+  TestRepo.__adapter__.execute_ddl(TestRepo, {:drop, transactions_table}, [])
 rescue
   e in RuntimeError -> e
 end

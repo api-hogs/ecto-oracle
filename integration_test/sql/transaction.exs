@@ -1,11 +1,11 @@
-defmodule Ecto.Integration.TransactionTest do
+defmodule EctoOracleAdapter.Integration.TransactionTest do
   # We can keep this test async as long as it
   # is the only one access the transactions table
   use ExUnit.Case, async: true
 
   import Ecto.Query
-  alias Ecto.Integration.PoolRepo
-  alias Ecto.Integration.TestRepo
+  alias EctoOracleAdapter.Integration.PoolRepo
+  alias EctoOracleAdapter.Integration.TestRepo
 
   defmodule UniqueError do
     defexception [:message]

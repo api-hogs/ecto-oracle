@@ -34,5 +34,9 @@ defmodule EctoOracleAdapter.Integration.Migration do
       add :user_id, references(:users)
       timestamps
     end
+
+    create table(:transactions) do
+      add :text, :string
+    end
   end
 end

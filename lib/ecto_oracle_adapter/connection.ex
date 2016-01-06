@@ -162,7 +162,7 @@ defmodule EctoOracleAdapter.Connection do
     join  = using(query, sources)
     where = delete_all_where(query.joins, query, sources)
 
-    assemble(["DELETE FROM #{table} AS #{name}", join, where])
+    assemble(["DELETE FROM #{table}", join, where])
   end
 
   def insert(prefix, table, header, rows, returning) do
