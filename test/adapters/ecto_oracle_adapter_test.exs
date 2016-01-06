@@ -489,10 +489,10 @@ defmodule EctoOracleAdapterTest do
 
   test "insert" do
     query = SQL.insert(nil, "model", [:x, :y], [[:x, :y]], [:id])
-    assert query == ~s{INSERT INTO "model" ("x","y") VALUES ($1,$2) RETURNING "id"}
+    assert query == ~s{INSERT INTO "model" ("x","y") VALUES (:x, :y) RETURNING "id"}
 
     query = SQL.insert(nil, "model", [:x, :y], [[:x, :y], [nil, :z]], [:id])
-    assert query == ~s{INSERT INTO "model" ("x","y") VALUES ($1,$2),(DEFAULT,$3) RETURNING "id"}
+    assert query == ~s{INSERT INTO "model" ("x","y") VALUES (:x, :y) RETURNING "id"}
 
     query = SQL.insert(nil, "model", [], [[]], [:id])
     assert query == ~s{INSERT INTO "model" VALUES (DEFAULT) RETURNING "id"}
@@ -571,7 +571,7 @@ defmodule EctoOracleAdapterTest do
                 {:add, :category_4, references(:categories, on_delete: :nilify_all), []}]}
 
     assert SQL.execute_ddl(create) == """
-    CREATE TABLE "posts" ("id" NUMBER(10) PRIMARY KEY,
+    CREATE TABLE "posts" ("id" INT PRIMARY KEY,
     "category_0" integer CONSTRAINT "posts_category_0_fkey" REFERENCES "categories"("id"),
     "category_1" integer CONSTRAINT "foo_bar" REFERENCES "categories"("id"),
     "category_2" integer CONSTRAINT "posts_category_2_fkey" REFERENCES "categories"("id"),
@@ -585,7 +585,7 @@ defmodule EctoOracleAdapterTest do
                [{:add, :id, :serial, [primary_key: true]},
                 {:add, :created_at, :datetime, []}]}
     assert SQL.execute_ddl(create) ==
-           ~s|CREATE TABLE "posts" ("id" NUMBER(10) PRIMARY KEY, "created_at" TIMESTAMP) WITH FOO=BAR|
+           ~s|CREATE TABLE "posts" ("id" INT PRIMARY KEY, "created_at" DATE) WITH FOO=BAR|
   end
 
   test "drop table" do
