@@ -34,9 +34,9 @@ defmodule EctoOracleAdapter.Connection do
      mapping_field = ":#{field}"
      case type do
        :integer ->
-         {mapping_field, 'SQLT_INT'}
+         {mapping_field, :SQLT_INT}
        Ecto.DateTime ->
-         {mapping_field, 'SQLT_DAT'}
+         {mapping_field, :SQLT_DAT}
        _ -> {field, type}
      end
   end
@@ -63,6 +63,7 @@ defmodule EctoOracleAdapter.Connection do
       IO.inspect(normalized_types)
 
       stmt.bind_vars(normalized_types)
+      IO.inspect(tupled_values)
       result = stmt.exec_stmt(tupled_values)
     else
       result = stmt.exec_stmt()
