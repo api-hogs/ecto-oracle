@@ -30,13 +30,14 @@ defmodule EctoOracleAdapter.Connection do
      end
   end
 
-  defp normalizer_types(x) do
-     case x do
-       {field, :integer} ->
-         {field, 'SQLT_INT'}
-       {field, Ecto.DateTime} ->
-         {field, 'SQLT_DAT'}
-       _ -> x
+  defp normalizer_types({field, type}) do
+     mapping_field = ":#{field}"
+     case type do
+       :integer ->
+         {mapping_field, 'SQLT_INT'}
+       Ecto.DateTime ->
+         {mapping_field, 'SQLT_DAT'}
+       _ -> {field, type}
      end
   end
 
@@ -59,6 +60,7 @@ defmodule EctoOracleAdapter.Connection do
 
       types = Keyword.get(opts, :types)
       normalized_types = Enum.map(types, &normalizer_types/1)
+      IO.inspect(normalized_types)
 
       stmt.bind_vars(normalized_types)
       result = stmt.exec_stmt(tupled_values)
