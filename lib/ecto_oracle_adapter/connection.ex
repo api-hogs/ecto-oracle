@@ -23,10 +23,19 @@ defmodule EctoOracleAdapter.Connection do
   end
 
   defp normalizer(x) do
-      IO.inspect x
      case x do
        {field, {{full_year, month, day}, {hour, minute, second, _}}} ->
          {field, :oci_util.edatetime_to_ora({{full_year, month, day},{hour, minute, second}})}
+       _ -> x
+     end
+  end
+
+  defp normalizer_types(x) do
+     case x do
+       {field, :integer} ->
+         {field, 'SQLT_INT'}
+       {field, Ecto.DateTime} ->
+         {field, 'SQLT_DAT'}
        _ -> x
      end
   end
@@ -37,18 +46,21 @@ defmodule EctoOracleAdapter.Connection do
       value -> value
     end
 
-    normalized_params = Enum.map(params, &normalizer/1)
-    {_, values} = Enum.unzip(normalized_params)
-    tupled_values = [List.to_tuple(values)]
 
     IO.inspect(sql)
     IO.inspect(params)
-    IO.inspect(tupled_values)
     IO.inspect(opts)
 
     stmt = conn.prep_sql(sql)
     if Regex.match?(~r/^(INSERT|UPDATE)/, sql) do
-      stmt.bind_vars([{":inserted_at", 'SQLT_DAT'}, {":version", 'SQLT_NUM'}])
+      normalized_params = Enum.map(params, &normalizer/1)
+      {_, values} = Enum.unzip(normalized_params)
+      tupled_values = [List.to_tuple(values)]
+
+      types = Keyword.get(opts, :types)
+      normalized_types = Enum.map(types, &normalizer_types/1)
+
+      stmt.bind_vars(normalized_types)
       result = stmt.exec_stmt(tupled_values)
     else
       result = stmt.exec_stmt()

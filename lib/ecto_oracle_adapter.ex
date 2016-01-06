@@ -27,9 +27,11 @@ defmodule EctoOracleAdapter do
     false
   end
 
-  def insert(repo, %{source: {prefix, source}}, params, returning, opts) do
+  def insert(repo, %{source: {prefix, source}} = schema_meta, params, returning, opts) do
     {fields, values} = :lists.unzip(params)
+    types = schema_meta.schema.__schema__(:types)
+    IO.inspect types
     sql = @conn.insert(prefix, source, fields, [fields], returning)
-    Ecto.Adapters.SQL.struct(repo, @conn, sql, params, returning, opts)
+    Ecto.Adapters.SQL.struct(repo, @conn, sql, params, returning, Keyword.merge(opts, [types: types]))
   end
 end
