@@ -35,4 +35,5 @@ defmodule EctoOracleAdapter do
     sql = @conn.insert(prefix, source, fields, [fields], returning)
     Ecto.Adapters.SQL.struct(repo, @conn, sql, sorted_params, returning, Keyword.merge(opts, [types: types]))
   end
+
 end

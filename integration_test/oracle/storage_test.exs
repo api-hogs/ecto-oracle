@@ -5,7 +5,7 @@ defmodule Ecto.Integration.StorageTest do
 
   def correct_params do
     Ecto.Repo.Supervisor.parse_url(
-      Application.get_env(:ecto, :pg_test_url) <> "/storage_mgt"
+      Application.get_env(:ecto_oracle_adapter, :pg_test_url) <> "/storage_mgt"
     )
   end
 

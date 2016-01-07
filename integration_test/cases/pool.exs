@@ -9,17 +9,17 @@ defmodule EctoOracleAdapter.Integration.PoolTest do
       "sojourn_broker" -> Ecto.Pools.SojournBroker
     end
 
-  repo = Application.get_env(:ecto, EctoOracleAdapter.Integration.TestRepo) ||
+  repo = Application.get_env(:ecto_oracle_adapter, EctoOracleAdapter.Integration.TestRepo) ||
          raise "could not find configuration for EctoOracleAdapter.Integration.TestRepo"
 
-  Application.put_env(:ecto, __MODULE__.MockRepo,
+  Application.put_env(:ecto_oracle_adapter, __MODULE__.MockRepo,
                       [pool: pool, pool_size: 1] ++ repo)
 
   defmodule MockRepo do
-    use Ecto.Repo, otp_app: :ecto
+    use Ecto.Repo, otp_app: :ecto_oracle_adapter
 
     def after_connect(conn) do
-      send Application.get_env(:ecto, :pool_test_pid), {:after_connect, conn}
+      send Application.get_env(:ecto_oracle_adapter, :pool_test_pid), {:after_connect, conn}
     end
   end
 
@@ -33,7 +33,7 @@ defmodule EctoOracleAdapter.Integration.PoolTest do
   end
 
   setup do
-    Application.put_env(:ecto, :pool_test_pid, self())
+    Application.put_env(:ecto_oracle_adapter, :pool_test_pid, self())
     :ok
   end
 

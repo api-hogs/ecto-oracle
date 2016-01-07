@@ -1,10 +1,10 @@
-defmodule Ecto.Integration.LockTest do
+defmodule EctoOracleAdapter.Integration.LockTest do
   # We can keep this test async as long as it
   # is the only one accessing the lock_test table.
   use ExUnit.Case, async: true
 
   import Ecto.Query
-  alias Ecto.Integration.PoolRepo
+  alias EctoOracleAdapter.Integration.PoolRepo
 
   defmodule LockCounter do
     use Ecto.Schema
@@ -24,8 +24,8 @@ defmodule Ecto.Integration.LockTest do
     pid = self()
 
     lock_for_update =
-      Application.get_env(:ecto, :lock_for_update) ||
-      raise ":lock_for_update not set in :ecto application"
+      Application.get_env(:ecto_oracle_adapter, :lock_for_update) ||
+      raise ":lock_for_update not set in :ecto_oracle_adapter application"
 
     # Here we are manually inserting the lock in the query
     # to test multiple adapters. Never do this in actual

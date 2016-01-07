@@ -35,6 +35,10 @@ defmodule EctoOracleAdapter.Connection do
      case type do
        :integer ->
          {mapping_field, :SQLT_INT}
+       :string ->
+         {mapping_field, :SQLT_STR}
+       :id ->
+         {mapping_field, :SQLT_INT}
        Ecto.DateTime ->
          {mapping_field, :SQLT_DAT}
        _ -> {field, type}
@@ -46,7 +50,6 @@ defmodule EctoOracleAdapter.Connection do
       %Ecto.Query.Tagged{value: value} -> value
       value -> value
     end
-
 
     IO.inspect(sql)
     IO.inspect(params)

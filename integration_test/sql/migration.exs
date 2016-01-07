@@ -1,7 +1,8 @@
-defmodule Ecto.Integration.MigrationTest do
+defmodule EctoOracleAdapter.Integration.MigrationTest do
   use ExUnit.Case
 
-  alias Ecto.Integration.TestRepo
+
+  alias EctoOracleAdapter.Integration.TestRepo
 
   defmodule CreateMigration do
     use Ecto.Migration
@@ -263,6 +264,8 @@ defmodule Ecto.Integration.MigrationTest do
 
   import Ecto.Query, only: [from: 2]
   import Ecto.Migrator, only: [up: 4, down: 4]
+
+  import TestOracleDb
 
   test "create and drop table and indexes" do
     assert :ok == up(TestRepo, 20050906120000, CreateMigration, log: false)
