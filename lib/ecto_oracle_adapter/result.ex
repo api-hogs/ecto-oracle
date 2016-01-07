@@ -18,6 +18,8 @@ defmodule EctoOracleAdapter.Result do
       {:rowids, ids} -> 
       # CHECK THIS
         %EctoOracleAdapter.Result{rows: Enum.map(ids, fn x -> [ id: x ] end), decoders: nil, num_rows: length(ids), columns: nil}
+      {{:rows, rows}, _completed} -> 
+        %EctoOracleAdapter.Result{rows: Enum.map(rows, fn [x] -> [x] end), decoders: nil, num_rows: length(rows), columns: nil}
       # {_column, _int1, number_of_records, _, _} when number_of_records == 0 -> []
       _ -> %EctoOracleAdapter.Result{rows: [], decoders: nil, num_rows: nil, columns: nil}
     end

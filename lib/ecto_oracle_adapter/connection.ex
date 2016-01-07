@@ -80,6 +80,9 @@ defmodule EctoOracleAdapter.Connection do
         IO.inspect(tupled_values)
 
         result = stmt.exec_stmt(tupled_values)
+      Regex.run(~r/^SELECT/, sql) ->
+        stmt.exec_stmt()
+        result = stmt.fetch_rows(500)
       Regex.run(~r/^CREATE/, sql) ->
         [_, table_name] = Regex.run(~r/CREATE TABLE \"(\w+)\"/, sql)
         result = if table_exists?(conn, table_name), do: nil, else: stmt.exec_stmt()
