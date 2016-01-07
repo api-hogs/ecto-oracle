@@ -45,6 +45,15 @@ defmodule EctoOracleAdapter.Connection do
      end
   end
 
+  def table_exists?(conn, table_name) do
+    sql = "select table_name from user_tables"
+    cmd = conn.prep_sql(sql)
+    cmd.exec_stmt()
+    {{:rows, rows}, true} = cmd.fetch_rows(500)
+
+    Enum.any?(rows, fn [x] -> x == table_name end)
+  end
+
   def query(conn, sql, params, opts) do
     params = Enum.map params, fn
       %Ecto.Query.Tagged{value: value} -> value
@@ -56,20 +65,26 @@ defmodule EctoOracleAdapter.Connection do
     IO.inspect(opts)
 
     stmt = conn.prep_sql(sql)
-    if Regex.match?(~r/^(INSERT|UPDATE)/, sql) do
-      normalized_params = Enum.map(params, &normalizer/1)
-      {_, values} = Enum.unzip(normalized_params)
-      tupled_values = [List.to_tuple(values)]
 
-      types = Keyword.get(opts, :types)
-      normalized_types = Enum.map(types, &normalizer_types/1)
-      IO.inspect(normalized_types)
+    cond do
+      Regex.match?(~r/^(INSERT|UPDATE)/, sql) ->
+        normalized_params = Enum.map(params, &normalizer/1)
+        {_, values} = Enum.unzip(normalized_params)
+        tupled_values = [List.to_tuple(values)]
 
-      stmt.bind_vars(normalized_types)
-      IO.inspect(tupled_values)
-      result = stmt.exec_stmt(tupled_values)
-    else
-      result = stmt.exec_stmt()
+        types = Keyword.get(opts, :types)
+        normalized_types = Enum.map(types, &normalizer_types/1)
+        IO.inspect(normalized_types)
+
+        stmt.bind_vars(normalized_types)
+        IO.inspect(tupled_values)
+
+        result = stmt.exec_stmt(tupled_values)
+      Regex.run(~r/^CREATE/, sql) ->
+        [_, table_name] = Regex.run(~r/CREATE TABLE \"(\w+)\"/, sql)
+        result = if table_exists?(conn, table_name), do: nil, else: stmt.exec_stmt()
+      true ->
+        result = stmt.exec_stmt()
     end
 
     stmt.close()
